@@ -39,8 +39,8 @@ public class MainActivity extends AppCompatActivity {
 
         setContentView(R.layout.activity_main);
         ActivityCompat.requestPermissions(MainActivity.this, new String[]
-                {Manifest.permission.WRITE_EXTERNAL_STORAGE,
-                        Manifest.permission.READ_EXTERNAL_STORAGE},
+                        {Manifest.permission.WRITE_EXTERNAL_STORAGE,
+                                Manifest.permission.READ_EXTERNAL_STORAGE},
                 1);
         initWidgets();
         callListener();
@@ -72,9 +72,15 @@ public class MainActivity extends AppCompatActivity {
         btnGet.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                if (ContextCompat.checkSelfPermission(MainActivity.this,
+                        Manifest.permission.READ_EXTERNAL_STORAGE) !=
+                        PackageManager.PERMISSION_GRANTED) {
 
 
-                getImageFromStorage();
+                } else {
+
+                    getImageFromStorage();
+                }
             }
 
 
@@ -83,7 +89,8 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void saveImage(Bitmap bitmap) {
-        myPath = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES).toString();
+        myPath = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES).
+                toString();
         dir = new File(myPath + "/mynewDirectory");
         dir.mkdir();
         imageName = new File(dir + "/img" + ".png");
@@ -97,12 +104,14 @@ public class MainActivity extends AppCompatActivity {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        MediaScannerConnection.scanFile(MainActivity.this, new String[]{imageName.toString()}, null, new MediaScannerConnection.OnScanCompletedListener() {
-            @Override
-            public void onScanCompleted(String s, Uri uri) {
+        MediaScannerConnection.scanFile(MainActivity.this,
+                new String[]{imageName.toString()}, null,
+                new MediaScannerConnection.OnScanCompletedListener() {
+                    @Override
+                    public void onScanCompleted(String s, Uri uri) {
 
-            }
-        });
+                    }
+                });
 
 
     }
@@ -113,7 +122,8 @@ public class MainActivity extends AppCompatActivity {
             return ((BitmapDrawable) drawable).getBitmap();
         }
 
-        Bitmap bitmap = Bitmap.createBitmap(drawable.getIntrinsicWidth(), drawable.getIntrinsicHeight(), Bitmap.Config.ARGB_8888);
+        Bitmap bitmap = Bitmap.createBitmap(drawable.getIntrinsicWidth(),
+                drawable.getIntrinsicHeight(), Bitmap.Config.ARGB_8888);
         Canvas canvas = new Canvas(bitmap);
         drawable.setBounds(0, 0, canvas.getWidth(), canvas.getHeight());
         drawable.draw(canvas);
